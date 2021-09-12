@@ -27,3 +27,7 @@
   color: #ffffff;
   cursor: pointer;
 }
+h2 a {
+  color: #000000;
+  text-decoration: none;
+}
