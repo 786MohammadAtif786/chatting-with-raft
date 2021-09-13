@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>chatting with sql</title>
   <link rel="stylesheet" href="/css/app.css">
-  <script src="/js/chat.js"></script>
 </head>
 <body>
     <aside class="left-section">
@@ -17,7 +16,7 @@
       <div class="user-list">
         <ul>
           <% for(let i = 0; i < users.length; i++) { %>
-            <li><a href="/user/<%= users[i].id %>"><%= users[i].name %></a></li>
+            <li <% if (toUser == users[i].id) { %> class="active" data-id="<%= toUser %>" <% } %> ><a href="/user/<%= users[i].id %>"><%= users[i].name %></a></li>
           <% } %> 
         </ul>
       </div>
@@ -26,7 +25,11 @@
       <div class="chat-box">
         <div class="chat-list">
           <% for(let i = 0; i < messages.length; i++) { %>
-            <li><%= messages[i].messages %></li>
+            <div class="class-other">
+              <ul>
+                <li class="message-list"><%= messages[i].message %></li>
+              </ul>
+            </div>
          <% } %>
           <div class="chat-self">
             <ul>
@@ -35,15 +38,16 @@
           </div>
           <div class="class-other">
             <ul>
-              <li class="message-list">Hello</li>
+              <li class="message-list"></li>
             </ul>
           </div>
         </div>
-        <div class="chat-form">
+        <div class="chat-form" <% if (toUser === null) { %> style="display:none;" <% } %>>
           <input type="text">
           <button>send</button>
         </div>
       </div>
     </main>
+    <script src="/js/chat.js"></script>
 </body>
 </html>

@@ -28,14 +28,24 @@ app.set('views', './views');
 const wsList = {};
 wss.on('connection', (ws) => {
   let id;
-  ws.on('message', (message) => {
-    message = JSON.parse(message.toString());
+  ws.on('message', (msgStr) => {
+    msgStr = msgStr.toString();
+    const message = JSON.parse(msgStr);
+    console.log(message);
     if (message.type === 'open') {
       id = message.id;
       wsList[message.id] = ws;
+      ws.send(msgStr);
     } else if (message.type === 'chat') {
-      if (wsList[message.to]) {
-        wsList[message.to].send(JSON.stringify(message));
+      if (wsList[message.toUser]) {
+        wsList[message.toUser].send(msgStr);
+        const msgQuery = `INSERT INTO messages(toUser, fromUser, message) VALUES(${message.toUser}, ${message.fromUser}, "${message.message}")`;
+        console.log(msgQuery);
+        connection.query(msgQuery, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
       }
     }
   });
@@ -49,7 +59,7 @@ app.get('/', (req, res) => {
     const query = `SELECT id, name FROM users WHERE id !=${req.session.user.id}`;
     console.log(query);
     connection.query(query, (err, users) => {
-      res.render('chat', {users, messages: []});
+      res.render('chat', {users, messages: [], toUser: null});
     });
   } else {
     res.render('login-register');
@@ -62,10 +72,12 @@ app.get('/logout', (req, res) => {
 app.get('/user/:id', (req, res) => {
   if (req.session.user) {
     const query = `SELECT id, name FROM users WHERE id !=${req.session.user.id}`;
-    console.log(query);
-    const messageQuery = `SELECT messages.message, messages.created, users.name`;
+    const messageQuery = `SELECT m.message, m.created, u.name, u.id as userId FROM messages m LEFT JOIN users u ON m.toUser=u.id AND m.fromUser=u.id WHERE m.toUser=${req.session.user.id} OR m.toUser=${req.params.id} AND m.toUser=${req.params.id} OR m.toUser=${req.session.user.id}`;
+    console.log(messageQuery);
     connection.query(query, (err, users) => {
-      res.render('chat', {users});
+      connection.query(query, (err, messages) => {
+        res.render('chat', {users, messages, toUser: req.params.id});
+      });
     });
   } else {
     res.redirect('/');
@@ -86,6 +98,7 @@ app.post('/login', (req, res) => {
         name: result[0].name,
         email: result[0].email
       }
+      res.cookie('user',result[0].id);
     }
     console.log(result);
     res.redirect('/');
@@ -102,6 +115,7 @@ app.post('/register', (req, res) => {
         name: req.body.name,
         email: req.body.email
       }
+      res.cookie('user', result.insertId);
     }
     res.redirect('/');
   });
