@@ -15,12 +15,9 @@
       </div>
       <div class="user-list">
         <ul>
-          <li>use1</li>
-          <li>use2</li>
-          <li>use3</li>
-          <li>use4</li>
-          <li>use5</li>
-          <li>use6</li>
+          <% for(let i = 0; i < users.length; i++) { %>
+            <li><a href="/user/<%= users[i].id %>"><%= users[i].name %></a></li>
+          <% } %> 
         </ul>
       </div>
     </aside>

@@ -25,7 +25,11 @@ app.set('views', './views');
 
 app.get('/', (req, res) => {
   if (req.session.user) {
-    res.render('chat');
+    const query = `SELECT id, name FROM users WHERE id !=${req.session.user.id}`;
+    console.log(query);
+    connection.query(query, (err, users) => {
+      res.render('chat', {users});
+    });
   } else {
     res.render('login-register');
   }
@@ -35,18 +39,47 @@ app.get('/logout', (req, res) => {
   res.redirect('/');
 });
 app.get('/user/:id', (req, res) => {
-  res.render('chat');
+  if (req.session.user) {
+    const query = `SELECT id, name FROM users WHERE id !=${req.session.user.id}`;
+    console.log(query);
+    connection.query(query, (err, users) => {
+      res.render('chat', {users});
+    });
+  } else {
+    res.redirect('/');
+  }
+});
+
+app.post('/login', (req, res) => {
+  console.log(req.body);
+  const query = `SELECT * FROM users WHERE email="${req.body.email}" AND password="${req.body.password}" limit 1`;
+  console.log(query);
+  connection.query(query, (err, result) => {
+    if (err) {
+      console.log(err);
+    } 
+    if (result.length > 0) {
+      req.session.user = {
+        id: result[0].id,
+        name: result[0].name,
+        email: result[0].email
+      }
+    }
+    console.log(result);
+    res.redirect('/');
+  });
 });
 app.post('/register', (req, res) => {
   const query = `INSERT INTO users (name, email, password, profileType) VALUES ("${req.body.name}", "${req.body.email}", "${req.body.password}", "${req.body['profile-type']}")`;
   connection.query(query, (err, result) => {
     if (err) {
       console.log(err);
-    }
-    req.session.user = {
-      id: result.insertId,
-      name: req.body.name,
-      email: req.body.email
+    } else {
+      req.session.user = {
+        id: result.insertId,
+        name: req.body.name,
+        email: req.body.email
+      }
     }
     res.redirect('/');
   });
