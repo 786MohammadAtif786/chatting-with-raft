@@ -2,8 +2,10 @@ const express = require('express');
 const ejs = require('ejs');
 const session = require('express-session');
 const mysql = require('mysql');
+const { WebSocketServer } = require('ws');
 
 const app = express();
+const wss = new WebSocketServer({port: 8080});
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -11,6 +13,7 @@ const connection = mysql.createConnection({
   database: 'chatting'
 });
 connection.connect();
+
 
 //appliction level middlweres
 app.use(express.urlencoded({extended: true}));
@@ -22,13 +25,31 @@ app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
 app.set('views', './views');
 
+const wsList = {};
+wss.on('connection', (ws) => {
+  let id;
+  ws.on('message', (message) => {
+    message = JSON.parse(message.toString());
+    if (message.type === 'open') {
+      id = message.id;
+      wsList[message.id] = ws;
+    } else if (message.type === 'chat') {
+      if (wsList[message.to]) {
+        wsList[message.to].send(JSON.stringify(message));
+      }
+    }
+  });
+  ws.on('close', () => {
+    delete wsList[id];
+  });
+});
 
 app.get('/', (req, res) => {
   if (req.session.user) {
     const query = `SELECT id, name FROM users WHERE id !=${req.session.user.id}`;
     console.log(query);
     connection.query(query, (err, users) => {
-      res.render('chat', {users});
+      res.render('chat', {users, messages: []});
     });
   } else {
     res.render('login-register');
@@ -42,6 +63,7 @@ app.get('/user/:id', (req, res) => {
   if (req.session.user) {
     const query = `SELECT id, name FROM users WHERE id !=${req.session.user.id}`;
     console.log(query);
+    const messageQuery = `SELECT messages.message, messages.created, users.name`;
     connection.query(query, (err, users) => {
       res.render('chat', {users});
     });
