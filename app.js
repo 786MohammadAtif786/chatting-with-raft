@@ -1,8 +1,16 @@
 const express = require('express');
 const ejs = require('ejs');
-const session = express('express-session');
+const session = require('express-session');
+const mysql = require('mysql');
 
 const app = express();
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'chatting'
+});
+connection.connect();
 
 //appliction level middlweres
 app.use(express.static('public'));
