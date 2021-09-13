@@ -1,15 +1,19 @@
 const express = require('express');
 const ejs = require('ejs');
+
 const app = express();
 
+//appliction level middlweres
 app.use(express.static('public'));
+
+//template engine
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
 app.set('views', './views');
 
 
 app.get('/', (req, res) => {
-  res.render('chat');
+  res.render('login-register');
 });
 app.get('/logout', (req, res) => {
   res.redirect('/');

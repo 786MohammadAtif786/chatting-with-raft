@@ -79,3 +79,40 @@ h2 a {
   font-weight: bold;
   font-size: 18px;
 }
+
+
+
+.login-form {
+  position: fixed;
+  float: left;
+  width: 30%;
+  height: 100%;
+  padding: 7%;
+}
+.first-field {
+  padding: 10px;
+}
+.first-field input , .first-field button{
+  padding: 8px;
+}
+.first-field button {
+  margin: 10px auto;
+  cursor: pointer;
+  width: 30%;
+}
+.register-form {
+  float: right; 
+  padding: 5%;
+  margin: 25px 20%;
+}
+.register-field {
+  padding: 8px;
+}
+.register-field input, .register-field button {
+  padding: 8px;
+}
+.register-field button {
+  width: 50%;
+  cursor: pointer;
+  margin: 10px auto;
+}

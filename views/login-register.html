@@ -1,3 +1,52 @@
-<!-- position: fixed;
-  right: 1px;
-  border: 1px solid #000000; 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login and Register Form</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <aside class="login-form">
+    <form method="POST" action="/login">
+      <div class="first-field">
+        <input type="email" name="eamil" placeholder="Email">
+      </div>
+      <div class="first-field">
+        <input type="password" name="password" placeholder="password">
+      </div>
+      <div class="first-field">
+        <button>Login</button>
+      </div>
+    </form>
+  </aside>
+  <main class="register-form">
+    <form action="/register" method="POST">
+      <div class="register-field">
+        <input type="text" name="name" placeholder="name">
+      </div>
+      <div class="register-field">
+        <input type="email" name="eamil" placeholder="Email">
+      </div>
+      <div class="register-field">
+        <input type="password" name="password" placeholder="password">
+      </div>
+      <div class="register-field">
+        <input type="password" name="confirm-password" placeholder="confirm-password">
+      </div>
+      <div class="register-field">
+        <input type="radio" name="profile-type" value="public" checked>
+        <label for="public">Public</label>
+      </div>
+      <div class="register-field">
+        <input type="radio" name="profile-type" value="private">
+        <label for="private">Private</label>
+      </div>
+      <div class="register-field">
+        <button>Register</button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>
