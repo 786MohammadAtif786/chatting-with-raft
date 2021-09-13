@@ -9,7 +9,13 @@ app.set('views', './views');
 
 
 app.get('/', (req, res) => {
-  res.render('chat')
+  res.render('chat');
+});
+app.get('/logout', (req, res) => {
+  res.redirect('/');
+});
+app.get('/user/:id', (req, res) => {
+  res.render('chat');
 });
 
 app.listen(3000, () => {
