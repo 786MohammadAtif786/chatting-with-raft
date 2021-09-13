@@ -1,10 +1,12 @@
 const express = require('express');
 const ejs = require('ejs');
+const session = express('express-session');
 
 const app = express();
 
 //appliction level middlweres
 app.use(express.static('public'));
+app.use(session({secret: 'this is my secret key'}));
 
 //template engine
 app.engine('html', ejs.renderFile);
