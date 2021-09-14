@@ -25,24 +25,14 @@
       <div class="chat-box">
         <div class="chat-list">
           <% for(let i = 0; i < messages.length; i++) { %>
-            <div class="class-other">
+            <div <% if (toUser == messages[i].fromUser) { %> class="class-other" <% } else { %> class="chat-self" <% } %> >
               <ul>
-                <li class="message-list"><%= messages[i].message %></li>
+                <li class="message-list"><%= messages[i].message %> </li>
               </ul>
             </div>
          <% } %>
-          <div class="chat-self">
-            <ul>
-             
-            </ul>
-          </div>
-          <div class="class-other">
-            <ul>
-              <li class="message-list"></li>
-            </ul>
-          </div>
         </div>
-        <div class="chat-form" <% if (toUser === null) { %> style="display:none;" <% } %>>
+        <div class="chat-form" <% if (toUser === null) { %> style="display:none;" <% } %> >
           <input type="text">
           <button>send</button>
         </div>

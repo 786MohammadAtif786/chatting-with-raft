@@ -72,10 +72,15 @@ app.get('/logout', (req, res) => {
 app.get('/user/:id', (req, res) => {
   if (req.session.user) {
     const query = `SELECT id, name FROM users WHERE id !=${req.session.user.id}`;
-    const messageQuery = `SELECT m.message, m.created, u.name, u.id as userId FROM messages m LEFT JOIN users u ON m.toUser=u.id AND m.fromUser=u.id WHERE m.toUser=${req.session.user.id} OR m.toUser=${req.params.id} AND m.toUser=${req.params.id} OR m.toUser=${req.session.user.id}`;
-    console.log(messageQuery);
+    const messageQuery = `SELECT messages.message, messages.toUser, messages.fromUser, messages.created, users.name
+                          FROM messages
+                          LEFT JOIN users 
+                          ON messages.fromUser=users.id
+                          WHERE  (messages.toUser=${req.session.user.id} OR messages.toUser=${req.params.id}) AND (messages.fromUser=${req.session.user.id} OR messages.fromUser=${req.params.id})
+                          order by messages.created asc;`;
     connection.query(query, (err, users) => {
-      connection.query(query, (err, messages) => {
+      connection.query(messageQuery, (err, messages) => {
+        console.log(messages);
         res.render('chat', {users, messages, toUser: req.params.id});
       });
     });
@@ -85,7 +90,6 @@ app.get('/user/:id', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  console.log(req.body);
   const query = `SELECT * FROM users WHERE email="${req.body.email}" AND password="${req.body.password}" limit 1`;
   console.log(query);
   connection.query(query, (err, result) => {
