@@ -16,7 +16,14 @@ webSocket.addEventListener('open', (e) => {
 webSocket.addEventListener('message', (eventObj) => {
   const msgObj = JSON.parse(eventObj.data);
   console.log(msgObj);
-
+  const messageEle = document.createElement('div');
+  messageEle.innerHTML = `<ul>
+                            <li class="message-list">${msgObj.message}</li>
+                          </ul>`;
+  messageEle.className = 'chat-other';
+  let chatList = document.querySelector('.chat-list');
+  chatList.append(messageEle);
+  chatList.scrollTop = chatList.scrollHeight;
 });
 document.querySelector('.chat-form button').addEventListener('click', () => {
   const msg = document.querySelector('.chat-form input').value;
@@ -30,4 +37,12 @@ document.querySelector('.chat-form button').addEventListener('click', () => {
   }
   webSocket.send(JSON.stringify(msgObj));
   document.querySelector('.chat-form input').value = '';
+  const messageEle = document.createElement('div');
+  messageEle.innerHTML = `<ul>
+                            <li class="message-list">${msg}</li>
+                          </ul>`;
+  messageEle.className = 'chat-self';
+  const chatList = document.querySelector('.chat-list');
+  chatList.append(messageEle);
+  chatList.scrollTop = chatList.scrollHeight;
 });

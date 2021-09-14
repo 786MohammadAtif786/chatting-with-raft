@@ -40,7 +40,6 @@ wss.on('connection', (ws) => {
       if (wsList[message.toUser]) {
         wsList[message.toUser].send(msgStr);
         const msgQuery = `INSERT INTO messages(toUser, fromUser, message) VALUES(${message.toUser}, ${message.fromUser}, "${message.message}")`;
-        console.log(msgQuery);
         connection.query(msgQuery, (err) => {
           if (err) {
             console.log(err);
@@ -57,7 +56,6 @@ wss.on('connection', (ws) => {
 app.get('/', (req, res) => {
   if (req.session.user) {
     const query = `SELECT id, name FROM users WHERE id !=${req.session.user.id}`;
-    console.log(query);
     connection.query(query, (err, users) => {
       res.render('chat', {users, messages: [], toUser: null});
     });
@@ -80,7 +78,6 @@ app.get('/user/:id', (req, res) => {
                           order by messages.created asc;`;
     connection.query(query, (err, users) => {
       connection.query(messageQuery, (err, messages) => {
-        console.log(messages);
         res.render('chat', {users, messages, toUser: req.params.id});
       });
     });
@@ -95,7 +92,7 @@ app.post('/login', (req, res) => {
   connection.query(query, (err, result) => {
     if (err) {
       console.log(err);
-    } 
+    }
     if (result.length > 0) {
       req.session.user = {
         id: result[0].id,
@@ -104,7 +101,6 @@ app.post('/login', (req, res) => {
       }
       res.cookie('user',result[0].id);
     }
-    console.log(result);
     res.redirect('/');
   });
 });
