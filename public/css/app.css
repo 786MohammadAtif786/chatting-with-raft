@@ -18,6 +18,7 @@
   height: 100%;
 }
 .user-list li {
+  list-style: none;
   padding: 10px;
   margin-bottom: 2px;
   text-align: center;
@@ -67,10 +68,12 @@ h2 a {
   overflow: auto;
 }
 .chat-self li {
+  list-style: none;
   text-align: right;
   background-color: #fce7e7;
 }
 .chat-other li {
+  list-style: none;
   text-align: left;
 }
 .message-list {
