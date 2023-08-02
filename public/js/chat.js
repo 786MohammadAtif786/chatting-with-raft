@@ -28,7 +28,6 @@ webSocket.addEventListener('message', (eventObj) => {
 document.querySelector('.chat-form button').addEventListener('click', () => {
   const msg = document.querySelector('.chat-form input').value;
   const userActive = document.querySelector('.user-list .active').getAttribute('data-id');
-
   const msgObj = {
     type: 'chat',
     toUser: Number.parseInt(userActive),

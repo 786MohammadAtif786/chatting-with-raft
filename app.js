@@ -86,7 +86,7 @@ app.get('/user/:id', (req, res) => {
   }
 });
 
-app.post('/login', (req, res) => {
+app.post('/api/v1/login', (req, res) => {
   const query = `SELECT * FROM users WHERE email="${req.body.email}" AND password="${req.body.password}" limit 1`;
   console.log(query);
   connection.query(query, (err, result) => {
@@ -104,7 +104,7 @@ app.post('/login', (req, res) => {
     res.redirect('/');
   });
 });
-app.post('/register', (req, res) => {
+app.post('/api/v1/register', (req, res) => {
   const query = `INSERT INTO users (name, email, password, profileType) VALUES ("${req.body.name}", "${req.body.email}", "${req.body.password}", "${req.body['profile-type']}")`;
   connection.query(query, (err, result) => {
     if (err) {
@@ -125,3 +125,4 @@ app.post('/register', (req, res) => {
 app.listen(3000, () => {
   console.log(`server is listening on 3000.`);
 });
+
